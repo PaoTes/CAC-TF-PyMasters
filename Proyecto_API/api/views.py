@@ -34,13 +34,24 @@ class ProductosView(View):
             return JsonResponse(datos)
             
 
-    def post(self, request):
+    '''def post(self, request):
        #print(request.body)
        jd=json.loads(request.body)
        #print(jd)
-       Productos.objects.create(Nombre=jd['Nombre'],Descripcion=jd['Descripcion'],Marca=jd['Marca'])
+       Productos.objects.create(Nombre=jd['Nombre'],Precio=jd['Precio'],Descripcion=jd['Descripcion'],Marca=jd['Marca'], Imagen=jd['Imagen'])
        datos={'message':"Success"}
-       return JsonResponse(datos)
+       return JsonResponse(datos)'''
+    def post(self, request):
+        jd = json.loads(request.body)
+        Productos.objects.create(
+            Nombre=jd['Nombre'],
+            Precio=jd['Precio'],
+            Descripcion=jd['Descripcion'],
+            Marca=jd['Marca'],
+            Imagen=jd['Imagen']
+        )
+        datos = {'message': "Success"}
+        return JsonResponse(datos)
 
 
     def put(self, request,id):
@@ -50,7 +61,9 @@ class ProductosView(View):
             producto=Productos.objects.get(id=id)
             producto.Nombre=jd['Nombre']
             producto.Descripcion=jd['Descripcion']
+            producto.Precio=jd['Precio']
             producto.Marca=jd['Marca']
+            producto.Imagen=jd['Imagen']
             producto.save()
             datos = {'message':"Success"}
         else:
