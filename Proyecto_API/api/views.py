@@ -12,7 +12,9 @@ import _json
 import json
 
 def index(request):
-    return HttpResponse()
+    return render(request,'index.html', {
+        
+    })
 
 class ProductosView(View):
     
