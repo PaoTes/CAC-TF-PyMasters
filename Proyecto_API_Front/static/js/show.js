@@ -1,0 +1,6 @@
+document.getElementById("txtId").value = parts[0][1]
+document.getElementById("txtNombre").value = parts[1][1]
+document.getElementById("txtDescripcion").value = parts[2][1]
+document.getElementById("txtPrecio").value= parts[3][1]
+document.getElementById("txtMarca").value= parts[4][1]
+document.getElementById("txtImagen").value= parts[5][1]
