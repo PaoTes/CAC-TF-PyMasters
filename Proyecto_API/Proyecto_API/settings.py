@@ -26,8 +26,10 @@ SECRET_KEY = 'django-insecure-*8fy!!$39j0sw=e2p1fmmq(pdv8x6n5hgwrbamx+&zl5d8p91$
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
-
+CORS_ALLOWED_ORIGINS = [
+"http://127.0.0.1:5500",
+# Otros orígenes permitidos en producción
+]
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,8 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'api',
     'rest_framework',
+    'corsheaders',
+    'api',
+    
 ]
 
 MIDDLEWARE = [
@@ -49,6 +53,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'Proyecto_API.urls'
@@ -127,6 +133,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

@@ -9,6 +9,9 @@ from .models import Productos
 import _json
 import json
 
+
+
+
 class ProductosView(View):
 
     @method_decorator(csrf_exempt)
@@ -78,3 +81,7 @@ class ProductosView(View):
         else:
             datos = {'message':"Product not found"}
         return JsonResponse(datos)
+    
+    
+def index(request):
+    return render(request, 'index.html')
