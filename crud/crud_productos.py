@@ -49,25 +49,29 @@ class CRUDProductos:
         self.cursor.execute('''SELECT * FROM api_productos WHERE id = %s''', (id,))
         return self.cursor.fetchall()
 
-    def actualizar_producto(self, producto):
-        self.cursor.execute('''UPDATE api_productos SET
-                            nombre = %s,  descripcion = %s, marca = %s,
-                            precio = %s, imagen = %s
-                            WHERE id = %s''',
-                        (producto.nombre, producto.descripcion, producto.marca, producto.precio, producto.imagen
-                         ))
+    def actualizar_producto(self, id, nuevos_valores):
+        update_query = "UPDATE api_productos SET "
+        update_params = []
+        for key, value in nuevos_valores.items():
+            update_query += f"{key} = %s, "
+            update_params.append(value)
+        update_query = update_query.rstrip(", ") + " WHERE id = %s"
+        update_params.append(id)
+        self.cursor.execute(update_query, tuple(update_params))
         self.connection.commit()
+        
     def borrar_producto(self, id):
         producto = self.buscar_producto(id)
         if producto:
             self.cursor.execute('''DELETE FROM api_productos WHERE id = %s''', (id,))
             self.connection.commit()
 
+
 def mostrar_menu():
     print("==== MENÚ ====")
     print("1. Agregar Producto")
     print("2. Mostrar todos los productos")
-    print("3. Buscar Producto por Nombre")
+    print("3. Buscar Producto por Id")
     print("4. Actualizar Producto")
     print("5. Eliminar Producto")
     print("6. Salir")
@@ -93,41 +97,53 @@ while True:
     elif opcion == "2":
         productos = crud.mostrar_productos()
         for producto in productos:
-            print(producto)
+           print("\n")
+           
+           prod_t= '''Id: {}\nNombre: {}\nDescripcion: {}\nMarca: {}\nUrl Imagen: {}\nPrecio: {}\n'''.format(*producto)
+           print(prod_t)
+           print("*"*100)
+           #print(producto)
 
     elif opcion == "3":
         id = int(input("Ingrese el Id del producto a buscar: "))
         productos = crud.buscar_producto(id)
         for producto in productos:
-            print(producto)
+            print("\n")
+           
+            prod_t= '''Id: {}\nNombre: {}\nDescripcion: {}\nMarca: {}\nUrl Imagen: {}\nPrecio: {}\n'''.format(*producto)
+            print(prod_t)
+            print("*"*100)
 
     elif opcion == "4":
-        id = int(input("Ingrese la palabra clave de la ley a actualizar: "))
+        id = int(input("Ingrese el Id del Producto a actualizar: "))
         producto = crud.buscar_producto(id)
-        if productos:
+    
+        if producto:
             producto_actualizar = producto[0]
             print("Ingrese los nuevos valores (deje en blanco para mantener los valores existentes):")
-            nombre = input("Nuevo número de normativa: ")
+            nombre = input("Nuevo Nombre: ")
             descripcion = input("Nueva descripción: ")
-            marca = input("Nuevo órgano legislativo: ")
+            marca = input("Nueva Marca: ")
             precio = float(input("Ingrese el nuevo precio: "))
             imagen = input("Nueva Url de la imagen: ")
-    
 
-        if nombre:
-            producto_actualizar.nombre = nombre
-        if descripcion:
-            producto_actualizar.descripcion = descripcion
-        if marca:
-            producto_actualizar.marca = marca
-        if precio:
-            producto_actualizar.precio = precio
-        if imagen:
-           producto_actualizar.imagen = imagen
-        
+            nuevos_valores = {}
 
-        crud.actualizar_producto(producto_actualizar)
-        print("Producto actualizado correctamente.")
+            if nombre:
+                nuevos_valores['nombre'] = nombre
+            if descripcion:
+                nuevos_valores['descripcion'] = descripcion
+            if marca:
+                nuevos_valores['marca'] = marca
+            if precio:
+                nuevos_valores['precio'] = precio
+            if imagen:
+                nuevos_valores['imagen'] = imagen
+
+            crud.actualizar_producto(id, nuevos_valores)
+            print("Producto actualizado correctamente.")
+        else:
+            print("Producto no encontrado.")
 
     elif opcion == "5":
         id = int(input("Ingrese el ID del producto a eliminar: "))
